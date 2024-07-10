@@ -164,6 +164,31 @@ def get_recommendation(user_id):
             "\nNo movie recommendations available at the moment. Must submit a movie review 🎅",
             end='\n')
 
+def ask_trivia(user_id):
+    c.execute("""
+        SELECT reviews.rating, reviews.comment, reviews.review_date, movies.title
+        FROM reviews
+        JOIN movies ON reviews.movie_id = movies.id
+        WHERE reviews.user_id = ?
+    """, (user_id,))
+    reviews = c.fetchall()
+
+    # Only here to use the movies & their titles
+    movies = []
+    ratings = []
+    comments = []
+    review_dates = []
+
+    for review in reviews:
+        rating, comment, review_date, movie_title = review
+        movies.append(movie_title)
+        ratings.append(rating)
+        comments.append(comment)
+        review_dates.append(review_date)
+
+    openapi.start_trivia(movies)
+
+    
 
 def main():
     user_id = None
@@ -186,8 +211,9 @@ def main():
         print("\n\t1. Review a Movie")
         print("\t2. Get a Recommended Movie")
         print("\t3. Get a List of Your Reviews")
-        print("\t4. Quit\n")
-        action = input("Please enter the number of your choice (1, 2, 3, or 4): ")
+        print("\t4. Movie Trivia")
+        print("\t5. Quit\n")
+        action = input("Please enter the number of your choice (1, 2, 3, 4 or 5): ")
         if action == '1':
             review_movie(user_id)
         elif action == '2':
@@ -198,6 +224,11 @@ def main():
             else:
                 print("\nYou have not made any recommendations yet\n")
         elif action == '4':
+            if recommendation_made(user_id):
+                ask_trivia(user_id)
+            else:
+                print("\nYou have not made any recommendations yet\n")
+        elif action == '5':
             print("\nThank you for using FlixFix. Goodbye!")
             break
 
