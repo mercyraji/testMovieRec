@@ -3,7 +3,7 @@ import openai
 from openai import OpenAI
 
 # Set environment variables
-my_api_key = 'sk-proj-hF0EKYccdUjF3QSH0FeRT3BlbkFJz2kETFLdKZ3TYT5rNK3M'
+my_api_key = 'OPENAI_API_KEY'
 
 openai.api_key = my_api_key
 

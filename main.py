@@ -1,14 +1,14 @@
 import sqlite3
 from datetime import datetime
-import APIClient
-import SEOapi
+import cinemagoer
+import openapi
 
 
 conn = sqlite3.connect('user_reviews.db')
 c = conn.cursor()
 
 try:
-    with open('Database.sql', 'r') as f:
+    with open('database.sql', 'r') as f:
         c.executescript(f.read())
     conn.commit()
 except sqlite3.OperationalError:
@@ -59,11 +59,11 @@ def login_user():
 def review_movie(user_id):
     title = input("Enter the movie title you want to submit a review for: ")
 
-    if APIClient.search_movie(title):
+    if cinemagoer.search_movie(title):
         rating = int(input("Rate the movie out of 5 stars: "))
         comment = input("Add some comments about the movie: ")
         review_date = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
-        movie_id = APIClient.get_movie_id(title)
+        movie_id = cinemagoer.get_movie_id(title)
 
         # Check if the movie is already in the movies table
         c.execute("SELECT id FROM movies WHERE title = ?", (title,))
@@ -156,7 +156,7 @@ def get_recommendation(user_id):
 
     if recommendation_made(user_id):
         movies, ratings, _, _ = fetch_reviews(user_id)
-        recommendation = SEOapi.get_movie_recommendation(
+        recommendation = openapi.get_movie_recommendation(
             movies, ratings, genre, age_rating, year_range)
         print(f"\nBased on your review history and answers, we recommend you to watch: \n\n{recommendation}\n")
     else:
@@ -200,3 +200,6 @@ def main():
         elif action == '4':
             print("\nThank you for using FlixFix. Goodbye!")
             break
+
+if __name__ == "__main__":
+    main()

@@ -1,0 +1,14 @@
+{% extends "layout.html" %}
+{% block content %}
+    <title>{{ title }}</title> <!-- This will be replaced by 'Home' -->
+    <h2>Welcome!</h2>
+    <p>This is the home page</p>
+    </nav>
+    {% if current_user.is_authenticated %}
+    <h1>You are logged in</h1>
+    <a href="/logout">Logout</a>
+    {% else %}
+    <h1>You are not logged in</h1>
+    {% endif %}
+    <a href="/sign-up"> Sign Up </a>
+{% endblock content %}
